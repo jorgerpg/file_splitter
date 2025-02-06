@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Arquivos</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/base.css') }}">
+    <script>
+        function toggleFolder(folderElement) {
+            const subFolder = folderElement.nextElementSibling;
+            if (subFolder.style.display === "none" || subFolder.style.display === "") {
+                subFolder.style.display = "block";
+            } else {
+                subFolder.style.display = "none";
+            }
+        }
+    </script>
+</head>
+<body>
+    <div class="container">
+        <h1>Arquivos e Pastas</h1>
+        <ul id="file-list">
+            {% for item in files %}
+                {% if item.type == 'directory' %}
+                    <li>
+                        <span class="folder" onclick="toggleFolder(this)">{{ item.name }}</span>
+                        <ul class="hidden">
+                            {% for sub_item in item.contents %}
+                                <li class="{{ sub_item.type }}">
+                                    {% if sub_item.type == 'directory' %}
+                                        <span class="folder" onclick="toggleFolder(this)">{{ sub_item.name }}</span>
+                                        <ul class="hidden">
+                                            {% for sub_sub_item in sub_item.contents %}
+                                                <li class="file">{{ sub_sub_item.name }}</li>
+                                            {% endfor %}
+                                        </ul>
+                                    {% else %}
+                                        <span class="file">{{ sub_item.name }}</span>
+                                    {% endif %}
+                                </li>
+                            {% endfor %}
+                        </ul>
+                    </li>
+                {% else %}
+                    <li class="file">{{ item.name }}</li>
+                {% endif %}
+            {% endfor %}
+        </ul>
+    </div>
+</body>
+</html>

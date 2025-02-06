@@ -1,0 +1,26 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Upload de Arquivos</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/base.css') }}">
+</head>
+<body>
+    <h1>Upload de Arquivos</h1>
+    <form action="/upload" method="post" enctype="multipart/form-data">
+        <label for="file">Selecione o arquivo:</label>
+        <input type="file" name="file" id="file" required><br><br>
+        <label for="part_size">Tamanho das partes:</label>
+        <input type="number" name="part_size" id="part_size" min="1" required><br><br>
+        <button type="submit">Enviar</button>
+    </form>
+    <br>
+    <!-- Botão para redirecionar para a página de arquivos -->
+    <a href="/files">
+        <button type="button">Ver Arquivos</button>
+    </a>
+    <br>
+    <a href="/logout">Logout</a>
+</body>
+</html>

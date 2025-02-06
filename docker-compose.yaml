@@ -1,0 +1,15 @@
+version: '3.8'
+
+services:
+  app:
+    build: ./app
+    container_name: file_splitter_app
+    ports:
+      - "5000:5000"
+    volumes:
+      - ./files:/var/www/html/files
+      - ./app/auth.db:/app/auth.db
+    environment:
+      - FLASK_ENV=development
+    restart: always
+    privileged: true
