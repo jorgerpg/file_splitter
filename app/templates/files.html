@@ -7,11 +7,19 @@
     <link rel="stylesheet" href="{{ url_for('static', filename='css/base.css') }}">
     <script>
         function toggleFolder(folderElement) {
-            const subFolder = folderElement.nextElementSibling;
+            // Acessa o container da pasta e depois a sublista
+            const container = folderElement.closest('.folder-container');
+            const subFolder = container.nextElementSibling;
             if (subFolder.style.display === "none" || subFolder.style.display === "") {
                 subFolder.style.display = "block";
             } else {
                 subFolder.style.display = "none";
+            }
+        }
+
+        function deleteFolder(folderName) {
+            if (confirm('Are you sure you want to delete this folder and all its contents?')) {
+                window.location.href = '/delete_folder/' + folderName;
             }
         }
     </script>
@@ -23,13 +31,19 @@
             {% for item in files %}
                 {% if item.type == 'directory' %}
                     <li>
-                        <span class="folder" onclick="toggleFolder(this)">{{ item.name }}</span>
-                        <ul class="hidden">
+                        <div class="folder-container">
+                            <span class="folder" onclick="toggleFolder(this)">{{ item.name }}</span>
+                            <button class="delete-btn" onclick="deleteFolder('{{ item.name }}')">Delete</button>
+                        </div>
+                        <!-- Sub-lista fora do container, mas dentro do li -->
+                        <ul class="sub-folder" style="display: none;">
                             {% for sub_item in item.contents %}
                                 <li class="{{ sub_item.type }}">
                                     {% if sub_item.type == 'directory' %}
-                                        <span class="folder" onclick="toggleFolder(this)">{{ sub_item.name }}</span>
-                                        <ul class="hidden">
+                                        <div class="folder-container">
+                                            <span class="folder" onclick="toggleFolder(this)">{{ sub_item.name }}</span>
+                                        </div>
+                                        <ul class="sub-folder" style="display: none;">
                                             {% for sub_sub_item in sub_item.contents %}
                                                 <li class="file">{{ sub_sub_item.name }}</li>
                                             {% endfor %}

@@ -1,3 +1,4 @@
+import shutil
 from flask import Flask, request, redirect, url_for, render_template, session, flash, send_from_directory
 import sqlite3
 import os
@@ -25,6 +26,32 @@ def get_db_connection():
 
 def is_authenticated():
   return 'username' in session
+
+
+# Rota para excluir uma pasta e seus arquivos
+
+
+@app.route('/delete_folder/<folder_name>', methods=['GET'])
+def delete_folder(folder_name):
+  if not is_authenticated():
+    return redirect(url_for('login'))
+
+  # Caminho completo para a pasta a ser deletada
+  folder_path = os.path.join(app.config['UPLOAD_FOLDER'], folder_name)
+
+  # Verifica se a pasta existe
+  if os.path.exists(folder_path) and os.path.isdir(folder_path):
+    try:
+      # Remove a pasta e todo o seu conteúdo
+      shutil.rmtree(folder_path)
+      flash(f'Pasta "{folder_name}" excluída com sucesso!')
+    except Exception as e:
+      flash(f'Erro ao excluir a pasta: {e}')
+  else:
+    flash('A pasta não foi encontrada.')
+
+  # Redireciona de volta para a lista de arquivos
+  return redirect(url_for('list_files'))
 
 
 @app.route('/files/<path:filename>')
